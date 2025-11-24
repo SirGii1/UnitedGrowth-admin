@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Account Setup - UnitedGrowth</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #0a0e27;
+        color: #e8e8e8;
+        line-height: 1.6;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+    }
+
+    .setup-container {
+        background: #151933;
+        padding: 3rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .setup-container h1 {
+        text-align: center;
+        color: #ff4757;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #b8b8b8;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+    }
+
+    .info-box {
+        background: rgba(0, 212, 255, 0.1);
+        border: 1px solid #00d4ff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-box i {
+        color: #00d4ff;
+        margin-right: 0.5rem;
+    }
+
+    .info-box p {
+        color: #b8b8b8;
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+    }
+
+    .credentials {
+        background: #0a0e27;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #3a3a52;
+    }
+
+    .credentials p {
+        color: #e8e8e8;
+        margin: 0.5rem 0;
+        font-family: 'Courier New', monospace;
+    }
+
+    .credentials strong {
+        color: #00d4ff;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #ff4757 0%, #cc3a48 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 1rem;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .alert-success {
+        background: rgba(0, 255, 170, 0.1);
+        border: 1px solid #00ffaa;
+        color: #00ffaa;
+    }
+
+    .alert-error {
+        background: rgba(255, 71, 87, 0.1);
+        border: 1px solid #ff4757;
+        color: #ff4757;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .status {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: #0a0e27;
+        border-radius: 8px;
+    }
+
+    .status i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .status.checking {
+        color: #ffc107;
+    }
+
+    .status.exists {
+        color: #00ffaa;
+    }
+
+    .status.not-exists {
+        color: #ff4757;
+    }
+
+    .warning-box {
+        background: rgba(255, 193, 7, 0.1);
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        color: #ffc107;
+    }
+
+    .warning-box i {
+        margin-right: 0.5rem;
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="setup-container">
+        <h1><i class="fas fa-shield-alt"></i> Admin Setup</h1>
+        <p class="subtitle">Create your admin account</p>
+
+```
+    <div id="alertContainer"></div>
+
+    <div class="info-box">
+        <p><i class="fas fa-info-circle"></i> This page will create your admin account in Firebase.</p>
+        <p><strong>Use these credentials to login:</strong></p>
+    </div>
+
+    <div class="credentials">
+        <p><strong>Email:</strong> admin@unitedgrowth.com</p>
+        <p><strong>Password:</strong> Admin@2025!Secure</p>
+    </div>
+
+    <div id="statusContainer" class="status checking hidden">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p id="statusText">Checking admin account...</p>
+    </div>
+
+    <button id="createAdminBtn" class="btn" onclick="createAdminAccount()">
+        <i class="fas fa-user-shield"></i> Create Admin Account
+    </button>
+
+    <button id="goToAdminBtn" class="btn btn-secondary hidden" onclick="goToAdminPanel()">
+        <i class="fas fa-arrow-right"></i> Go to Admin Panel
+    </button>
+
+    <div class="warning-box" style="margin-top: 1.5rem;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>Important:</strong> Make sure you have the admin-panel.html file in the same directory as this page.
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAmAnyRp-vRR-d5PsZVvMBD9jjUI6C3drw",
+        authDomain: "unitedgrowth-76583.firebaseapp.com",
+        projectId: "unitedgrowth-76583",
+        storageBucket: "unitedgrowth-76583.firebasestorage.app",
+        messagingSenderId: "386993897454",
+        appId: "1:386993897454:web:387f80bbc391d0b17c58ff"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ADMIN_EMAIL = "admin@unitedgrowth.com";
+    const ADMIN_PASSWORD = "Admin@2025!Secure";
+
+    // Check if admin exists on load
+    window.addEventListener('load', checkAdminExists);
+
+    async function checkAdminExists() {
+        const statusContainer = document.getElementById('statusContainer');
+        const statusText = document.getElementById('statusText');
+        const createBtn = document.getElementById('createAdminBtn');
+        const goToBtn = document.getElementById('goToAdminBtn');
+
+        statusContainer.classList.remove('hidden');
+        statusText.textContent = 'Checking admin account...';
+
+        try {
+            // Try to sign in to check if account exists
+            const userCredential = await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+            const user = userCredential.user;
+            
+            // Check if user has admin role in Firestore
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            
+            if (userDoc.exists() && userDoc.data().role === 'admin') {
+                // Account exists and has admin role
+                statusContainer.className = 'status exists';
+                statusText.innerHTML = '<i class="fas fa-check-circle"></i><br>Admin account ready!';
+                createBtn.classList.add('hidden');
+                goToBtn.classList.remove('hidden');
+                
+                showAlert('Admin account is ready! You can now access the admin panel.', 'success');
+                
+                // Sign out after checking
+                await signOut(auth);
+            } else {
+                // Account exists but doesn't have admin role - need to update
+                statusContainer.className = 'status not-exists';
+                statusText.innerHTML = '<i class="fas fa-exclamation-circle"></i><br>Admin role not set';
+                createBtn.textContent = 'Set Admin Role';
+                createBtn.classList.remove('hidden');
+                goToBtn.classList.add('hidden');
+                
+                showAlert('Account exists but needs admin role. Click button to set admin role.', 'error');
+                
+                // Sign out after checking
+                await signOut(auth);
+            }
+        } catch (error) {
+            // Account doesn't exist
+            statusContainer.className = 'status not-exists';
+            statusText.innerHTML = '<i class="fas fa-exclamation-circle"></i><br>Admin account not found';
+            createBtn.classList.remove('hidden');
+            goToBtn.classList.add('hidden');
+            
+            showAlert('Admin account needs to be created. Click the button below.', 'error');
+        }
+    }
+
+    window.createAdminAccount = async function() {
+        const createBtn = document.getElementById('createAdminBtn');
+        const statusContainer = document.getElementById('statusContainer');
+        const statusText = document.getElementById('statusText');
+        
+        createBtn.disabled = true;
+        createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+        
+        statusContainer.className = 'status checking';
+        statusContainer.classList.remove('hidden');
+        statusText.innerHTML = '<i class="fas fa-spinner fa-spin"></i><br>Creating admin account...';
+
+        try {
+            // Try to create the admin account
+            const userCredential = await createUserWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+            const user = userCredential.user;
+
+            // Create admin document in Firestore with admin role
+            await setDoc(doc(db, 'users', user.uid), {
+                email: ADMIN_EMAIL,
+                role: 'admin',
+                name: 'Administrator',
+                createdAt: new Date().toISOString(),
+                isAdmin: true,
+                balance: 0,
+                totalDeposits: 0,
+                totalProfit: 0,
+                transactions: [],
+                investments: [],
+                withdrawals: []
+            });
+
+            // Success
+            statusContainer.className = 'status exists';
+            statusText.innerHTML = '<i class="fas fa-check-circle"></i><br>Admin account created successfully!';
+            
+            showAlert('Admin account created successfully! You can now login to the admin panel.', 'success');
+            
+            createBtn.classList.add('hidden');
+            document.getElementById('goToAdminBtn').classList.remove('hidden');
+            
+            // Sign out after creating
+            await signOut(auth);
+
+        } catch (error) {
+            console.error('Error:', error);
+            
+            if (error.code === 'auth/email-already-in-use') {
+                // Account exists, try to sign in and update role
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+                    const user = userCredential.user;
+                    
+                    // Update/create Firestore document with admin role
+                    await setDoc(doc(db, 'users', user.uid), {
+                        email: ADMIN_EMAIL,
+                        role: 'admin',
+                        name: 'Administrator',
+                        createdAt: new Date().toISOString(),
+                        isAdmin: true,
+                        balance: 0,
+                        totalDeposits: 0,
+                        totalProfit: 0,
+                        transactions: [],
+                        investments: [],
+                        withdrawals: []
+                    }, { merge: true });
+                    
+                    statusContainer.className = 'status exists';
+                    statusText.innerHTML = '<i class="fas fa-check-circle"></i><br>Admin role set successfully!';
+                    showAlert('Admin account is ready! You can now login to the admin panel.', 'success');
+                    
+                    createBtn.classList.add('hidden');
+                    document.getElementById('goToAdminBtn').classList.remove('hidden');
+                    
+                    // Sign out after updating
+                    await signOut(auth);
+                    
+                } catch (updateError) {
+                    statusContainer.className = 'status not-exists';
+                    statusText.innerHTML = '<i class="fas fa-exclamation-circle"></i><br>Error setting admin role';
+                    showAlert('Error: ' + updateError.message, 'error');
+                    createBtn.disabled = false;
+                    createBtn.innerHTML = '<i class="fas fa-user-shield"></i> Try Again';
+                }
+            } else {
+                statusContainer.className = 'status not-exists';
+                statusText.innerHTML = '<i class="fas fa-exclamation-circle"></i><br>Error creating account';
+                
+                let errorMsg = 'Error creating admin account: ';
+                if (error.code === 'auth/weak-password') {
+                    errorMsg = 'Password should be at least 6 characters';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = 'Invalid email address';
+                } else {
+                    errorMsg += error.message;
+                }
+                
+                showAlert(errorMsg, 'error');
+                createBtn.disabled = false;
+                createBtn.innerHTML = '<i class="fas fa-user-shield"></i> Create Admin Account';
+            }
+        }
+    };
+
+    window.goToAdminPanel = function() {
+        // Redirect to admin panel page
+        window.location.href = 'admin-panel.html';
+    };
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+        
+        alertContainer.innerHTML = `
+            <div class="alert ${alertClass}">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                ${message}
+            </div>
+        `;
+    }
+</script>
+```
+
+</body>
+</html>
